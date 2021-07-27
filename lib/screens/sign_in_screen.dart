@@ -10,91 +10,84 @@ class SignInScreen extends StatefulWidget {
 }
 
 class _SignInScreenState extends State<SignInScreen> {
+  TextEditingController _emailController = new TextEditingController();
+  TextEditingController _passwordController = new TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _bodyWidget(),
+      body: GestureDetector(
+          onTap: () {
+            FocusScope.of(context).unfocus();
+          },
+          child: _bodyWidget()),
     );
   }
 
   Widget _bodyWidget() {
-    return SafeArea(
+    return SingleChildScrollView(
       child: Padding(
-        padding: const EdgeInsets.only(
-          left: 16.0,
-          right: 16.0,
-          bottom: 20.0,
-        ),
-        child: Center(
-          child: Column(
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              Expanded(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    FutureBuilder(
-                      future:
-                          Authentication.initializeFirebase(context: context),
-                      builder: (context, snapshot) {
-                        if (snapshot.hasError) {
-                          return Text('Error initializing Firebase');
-                        } else if (snapshot.connectionState ==
-                            ConnectionState.done) {
-                          return Column(
-                            children: [
-                              SizedBox(
-                                height: 155.0,
-                                child: Image.asset(
-                                  "assets/images/carrot.jpg",
-                                  fit: BoxFit.contain,
-                                ),
-                              ),
-                              SizedBox(height: 45.0),
-                              emailField(),
-                              SizedBox(height: 25.0),
-                              passwordField(),
-                              SizedBox(
-                                height: 35.0,
-                              ),
-                              loginButon(),
-                              SizedBox(
-                                height: 15.0,
-                              ),
-                              _googleSignInButton(),
-                              _kakaoSignInButton(),
-                              _facebookSignInButton(),
-                            ],
-                          );
-                        }
-                        return CircularProgressIndicator();
-                      },
-                    ),
-                  ],
-                ),
+        padding: const EdgeInsets.all(30.0),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            SizedBox(
+              height: 200.0,
+              child: Image.asset(
+                "assets/images/carrot.jpg",
+                fit: BoxFit.contain,
               ),
-            ],
-          ),
+            ),
+            SizedBox(height: 45.0),
+            emailField(),
+            SizedBox(height: 25.0),
+            passwordField(),
+            SizedBox(
+              height: 35.0,
+            ),
+            loginButon(),
+            SizedBox(
+              height: 15.0,
+            ),
+            FutureBuilder(
+              future: Authentication.initializeFirebase(context: context),
+              builder: (context, snapshot) {
+                if (snapshot.hasError) {
+                  return Text('Error initializing Firebase');
+                } else if (snapshot.connectionState == ConnectionState.done) {
+                  return Column(
+                    children: [
+                      _googleSignInButton(),
+                      _facebookSignInButton(),
+                      _kakaoSignInButton(),
+                    ],
+                  );
+                }
+                return CircularProgressIndicator();
+              },
+            ),
+          ],
         ),
       ),
     );
   }
 
-  Widget emailField() => TextField(
-        obscureText: false,
+  TextField emailField() => TextField(
+        controller: _emailController,
         style: TextStyle(
           fontSize: 20.0,
         ),
         decoration: InputDecoration(
+            fillColor: Color(0xfff08f4f),
             contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
             hintText: "Email",
             border:
                 OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))),
       );
 
-  Widget passwordField() => TextField(
+  TextField passwordField() => TextField(
         obscureText: true,
+        controller: _passwordController,
         style: TextStyle(
           fontSize: 20.0,
         ),
@@ -105,20 +98,37 @@ class _SignInScreenState extends State<SignInScreen> {
                 OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))),
       );
 
-  Widget loginButon() => Material(
+  Widget loginButon() => MaterialButton(
+        color: Colors.white,
+        shape: StadiumBorder(),
+        onPressed: () {},
         elevation: 5.0,
-        borderRadius: BorderRadius.circular(30.0),
-        color: Color(0xff01A0C7),
-        child: MaterialButton(
-          minWidth: MediaQuery.of(context).size.width,
-          padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-          onPressed: () {},
-          child: Text("Login",
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                  fontSize: 20.0,
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold)),
+        child: Container(
+          width: 200,
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Padding(
+                padding: EdgeInsets.all(6.0),
+                child: Image.asset(
+                  'assets/images/carrot.jpg',
+                  width: 25.0,
+                  height: 25.0,
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.all(6.0),
+                child: Text(
+                  'Sign in with Email',
+                  style: TextStyle(
+                    fontSize: 14.0,
+                    color: Colors.black,
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       );
 
