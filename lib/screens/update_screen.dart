@@ -112,10 +112,11 @@ class _UpdateScreenState extends State<UpdateScreen> {
           onPressed: () async {
             if (_formKey.currentState!.validate()) {
               await _firebaseRepository.updateDoc(
-                  widget.dong,
-                  widget.docId,
-                  _titleController.text.toString(),
-                  _priceController.text.toString());
+                widget.dong,
+                widget.docId,
+                _titleController.text.toString(),
+                _priceController.text.toString(),
+              );
 
               var count = 0;
               Navigator.popUntil(context, (route) {
