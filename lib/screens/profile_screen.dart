@@ -1,11 +1,15 @@
 import 'package:carrot_clone/screens/favorite_screen.dart';
+import 'package:carrot_clone/utils/authentication.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
 class ProfileScreen extends StatelessWidget {
-  const ProfileScreen({Key? key}) : super(key: key);
-
+  final User user;
+  final LoginType loginType;
+  const ProfileScreen({Key? key, required this.user, required this.loginType})
+      : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -146,13 +150,13 @@ class ProfileScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      '오규찬',
+                      user.displayName.toString(),
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                     Text(
-                      '양덕동#12345',
+                      user.email.toString(),
                       style:
                           TextStyle(fontSize: 10, fontWeight: FontWeight.w100),
                     ),
@@ -251,7 +255,9 @@ class ProfileScreen extends StatelessWidget {
             ),
             child: CircleAvatar(
               radius: 35,
-              backgroundImage: Image.asset("assets/images/user.png").image,
+              backgroundImage: Image.network(
+                user.photoURL.toString(),
+              ).image,
             ),
           ),
           Positioned(

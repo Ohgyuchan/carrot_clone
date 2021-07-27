@@ -1,20 +1,29 @@
 import 'package:carrot_clone/screens/home_screen.dart';
 import 'package:carrot_clone/screens/profile_screen.dart';
+import 'package:carrot_clone/utils/authentication.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class AppScreen extends StatefulWidget {
-  const AppScreen({Key? key}) : super(key: key);
+  final User user;
+  final LoginType loginType;
+  const AppScreen({Key? key, required this.user, required this.loginType})
+      : super(key: key);
 
   @override
   _AppScreenState createState() => _AppScreenState();
 }
 
 class _AppScreenState extends State<AppScreen> {
+  late User _user;
+  late LoginType _loginType;
   late int _currentPageIndex;
   @override
   void initState() {
     super.initState();
+    _user = widget.user;
+    _loginType = widget.loginType;
     _currentPageIndex = 0;
   }
 
@@ -29,7 +38,10 @@ class _AppScreenState extends State<AppScreen> {
   Widget _bodyWidget() {
     switch (_currentPageIndex) {
       case 0: // 홈
-        return HomeScreen();
+        return HomeScreen(
+          user: _user,
+          loginType: _loginType,
+        );
       case 1: // 동네 생활
         return Center(
           child: Text('동네 생활'),
@@ -43,7 +55,10 @@ class _AppScreenState extends State<AppScreen> {
           child: Text('채팅'),
         );
       case 4: // 나의 당근
-        return ProfileScreen();
+        return ProfileScreen(
+          user: _user,
+          loginType: _loginType,
+        );
     }
     return Container();
   }
