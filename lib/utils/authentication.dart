@@ -1,4 +1,4 @@
-import 'package:carrot_clone/screens/home_screen.dart';
+import 'package:carrot_clone/screens/app_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -18,7 +18,7 @@ class Authentication {
     if (user != null) {
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
-          builder: (context) => HomeScreen(
+          builder: (context) => AppScreen(
             loginType: _loginType,
             user: user,
           ),

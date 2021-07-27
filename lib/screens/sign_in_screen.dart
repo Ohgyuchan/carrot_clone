@@ -13,51 +13,114 @@ class _SignInScreenState extends State<SignInScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.only(
-            left: 16.0,
-            right: 16.0,
-            bottom: 20.0,
-          ),
-          child: Center(
-            child: Column(
-              mainAxisSize: MainAxisSize.max,
-              children: [
-                Expanded(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      FutureBuilder(
-                        future:
-                            Authentication.initializeFirebase(context: context),
-                        builder: (context, snapshot) {
-                          if (snapshot.hasError) {
-                            return Text('Error initializing Firebase');
-                          } else if (snapshot.connectionState ==
-                              ConnectionState.done) {
-                            return Column(
-                              children: [
-                                _googleSignInButton(),
-                                _kakaoSignInButton(),
-                                _facebookSignInButton(),
-                              ],
-                            );
-                          }
-                          return CircularProgressIndicator();
-                        },
-                      ),
-                    ],
-                  ),
+      body: _bodyWidget(),
+    );
+  }
+
+  Widget _bodyWidget() {
+    return SafeArea(
+      child: Padding(
+        padding: const EdgeInsets.only(
+          left: 16.0,
+          right: 16.0,
+          bottom: 20.0,
+        ),
+        child: Center(
+          child: Column(
+            mainAxisSize: MainAxisSize.max,
+            children: [
+              Expanded(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    FutureBuilder(
+                      future:
+                          Authentication.initializeFirebase(context: context),
+                      builder: (context, snapshot) {
+                        if (snapshot.hasError) {
+                          return Text('Error initializing Firebase');
+                        } else if (snapshot.connectionState ==
+                            ConnectionState.done) {
+                          return Column(
+                            children: [
+                              SizedBox(
+                                height: 155.0,
+                                child: Image.asset(
+                                  "assets/images/carrot.jpg",
+                                  fit: BoxFit.contain,
+                                ),
+                              ),
+                              SizedBox(height: 45.0),
+                              emailField(),
+                              SizedBox(height: 25.0),
+                              passwordField(),
+                              SizedBox(
+                                height: 35.0,
+                              ),
+                              loginButon(),
+                              SizedBox(
+                                height: 15.0,
+                              ),
+                              _googleSignInButton(),
+                              _kakaoSignInButton(),
+                              _facebookSignInButton(),
+                            ],
+                          );
+                        }
+                        return CircularProgressIndicator();
+                      },
+                    ),
+                  ],
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),
     );
   }
+
+  Widget emailField() => TextField(
+        obscureText: false,
+        style: TextStyle(
+          fontSize: 20.0,
+        ),
+        decoration: InputDecoration(
+            contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
+            hintText: "Email",
+            border:
+                OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))),
+      );
+
+  Widget passwordField() => TextField(
+        obscureText: true,
+        style: TextStyle(
+          fontSize: 20.0,
+        ),
+        decoration: InputDecoration(
+            contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
+            hintText: "Password",
+            border:
+                OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))),
+      );
+
+  Widget loginButon() => Material(
+        elevation: 5.0,
+        borderRadius: BorderRadius.circular(30.0),
+        color: Color(0xff01A0C7),
+        child: MaterialButton(
+          minWidth: MediaQuery.of(context).size.width,
+          padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
+          onPressed: () {},
+          child: Text("Login",
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                  fontSize: 20.0,
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold)),
+        ),
+      );
 
   Widget _googleSignInButton() {
     return SignInButton(

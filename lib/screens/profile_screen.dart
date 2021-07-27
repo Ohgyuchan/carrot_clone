@@ -156,6 +156,11 @@ class ProfileScreen extends StatelessWidget {
                       ),
                     ),
                     Text(
+                      user.uid.toString(),
+                      style:
+                          TextStyle(fontSize: 10, fontWeight: FontWeight.w100),
+                    ),
+                    Text(
                       user.email.toString(),
                       style:
                           TextStyle(fontSize: 10, fontWeight: FontWeight.w100),

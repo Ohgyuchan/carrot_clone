@@ -24,7 +24,6 @@ class _HomeScreenState extends State<HomeScreen> {
   late LoginType _loginType;
   late String _currentLocation;
   late FirebaseRepository _firebaseRepository;
-  late ContentsRepository _contentsRepository;
   final Map<String, String> locationTypeToString = {
     'ara': '아라동',
     'ora': '오라동',
@@ -37,7 +36,6 @@ class _HomeScreenState extends State<HomeScreen> {
     _user = widget.user;
     _loginType = widget.loginType;
     _currentLocation = 'ara';
-    _contentsRepository = ContentsRepository();
     _firebaseRepository = FirebaseRepository();
   }
 
