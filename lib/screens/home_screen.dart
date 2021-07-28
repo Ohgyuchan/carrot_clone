@@ -2,22 +2,28 @@ import 'package:carrot_clone/repositories/contents_repository.dart';
 import 'package:carrot_clone/repositories/firebase_repository.dart';
 import 'package:carrot_clone/screens/add_screen.dart';
 import 'package:carrot_clone/screens/detail_screen.dart';
+import 'package:carrot_clone/utils/authentication.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:carrot_clone/utils/data_utils.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({Key? key}) : super(key: key);
+  final User user;
+  final LoginType loginType;
+  const HomeScreen({Key? key, required this.user, required this.loginType})
+      : super(key: key);
 
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  late User _user;
+  late LoginType _loginType;
   late String _currentLocation;
   late FirebaseRepository _firebaseRepository;
-  late ContentsRepository _contentsRepository;
   final Map<String, String> locationTypeToString = {
     'ara': '아라동',
     'ora': '오라동',
@@ -27,8 +33,9 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
+    _user = widget.user;
+    _loginType = widget.loginType;
     _currentLocation = 'ara';
-    _contentsRepository = ContentsRepository();
     _firebaseRepository = FirebaseRepository();
   }
 

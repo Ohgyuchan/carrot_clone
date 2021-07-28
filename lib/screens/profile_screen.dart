@@ -1,10 +1,31 @@
 import 'package:carrot_clone/screens/favorite_screen.dart';
+import 'package:carrot_clone/screens/sign_in_screen.dart';
+import 'package:carrot_clone/utils/authentication.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
-class ProfileScreen extends StatelessWidget {
-  const ProfileScreen({Key? key}) : super(key: key);
+class ProfileScreen extends StatefulWidget {
+  final User user;
+  final LoginType loginType;
+  const ProfileScreen({Key? key, required this.user, required this.loginType})
+      : super(key: key);
+
+  @override
+  _ProfileScreenState createState() => _ProfileScreenState();
+}
+
+class _ProfileScreenState extends State<ProfileScreen> {
+  late User _user;
+  late LoginType _loginType;
+
+  @override
+  void initState() {
+    _user = widget.user;
+    _loginType = widget.loginType;
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -16,10 +37,7 @@ class ProfileScreen extends StatelessWidget {
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
         actions: [
-          IconButton(
-            onPressed: () {},
-            icon: Icon(Icons.settings_outlined),
-          ),
+          _makePopUpMenu(),
         ],
       ),
       body: ListView(
@@ -47,6 +65,77 @@ class ProfileScreen extends StatelessWidget {
           _makeBoard(),
         ],
       ),
+    );
+  }
+
+  Widget _makePopUpMenu() {
+    return PopupMenuButton(
+      icon: Icon(Icons.settings_outlined),
+      onSelected: (int value) {
+        _showDialog();
+      },
+      itemBuilder: (context) => [
+        PopupMenuItem(
+          child: Text("로그아웃"),
+          value: 1,
+        ),
+      ],
+    );
+  }
+
+  void _showDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("로그아웃(${_loginType})"),
+          content: Text("로그아웃을 하시겠습니까?"),
+          actions: <Widget>[
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                TextButton(
+                  onPressed: () async {
+                    _loginType == LoginType.Google
+                        ? await Authentication.signOutWithGoogle(
+                            context: context)
+                        : await Authentication.signOutWithFacebook(
+                            context: context);
+                    Navigator.of(context)
+                        .pushReplacement(_routeToSignInScreen());
+                  },
+                  child: Text("로그아웃"),
+                ),
+                TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: Text("취소"),
+                ),
+              ],
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Route _routeToSignInScreen() {
+    return PageRouteBuilder(
+      pageBuilder: (context, animation, secondaryAnimation) => SignInScreen(),
+      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+        var begin = Offset(-1.0, 0.0);
+        var end = Offset.zero;
+        var curve = Curves.ease;
+
+        var tween =
+            Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+        return SlideTransition(
+          position: animation.drive(tween),
+          child: child,
+        );
+      },
     );
   }
 
@@ -146,13 +235,18 @@ class ProfileScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      '오규찬',
+                      _user.displayName.toString(),
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                     Text(
-                      '양덕동#12345',
+                      _user.uid.toString(),
+                      style:
+                          TextStyle(fontSize: 10, fontWeight: FontWeight.w100),
+                    ),
+                    Text(
+                      _user.email.toString(),
                       style:
                           TextStyle(fontSize: 10, fontWeight: FontWeight.w100),
                     ),
@@ -251,7 +345,9 @@ class ProfileScreen extends StatelessWidget {
             ),
             child: CircleAvatar(
               radius: 35,
-              backgroundImage: Image.asset("assets/images/user.png").image,
+              backgroundImage: Image.network(
+                _user.photoURL.toString(),
+              ).image,
             ),
           ),
           Positioned(

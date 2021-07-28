@@ -1,4 +1,4 @@
-import 'package:carrot_clone/screens/app_screen.dart';
+import 'package:carrot_clone/screens/sign_in_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
@@ -17,7 +17,7 @@ class MyApp extends StatelessWidget {
         primaryColor: Colors.white,
         primarySwatch: Colors.blue,
       ),
-      home: AppScreen(),
+      home: SignInScreen(),
     );
   }
 }
