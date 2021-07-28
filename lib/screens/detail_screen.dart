@@ -4,6 +4,7 @@ import 'package:carrot_clone/repositories/contents_repository.dart';
 import 'package:carrot_clone/repositories/firebase_repository.dart';
 import 'package:carrot_clone/screens/update_screen.dart';
 import 'package:carrot_clone/utils/data_utils.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
@@ -16,6 +17,7 @@ class DetailScreen extends StatefulWidget {
   final String location;
   final String price;
   final String likes;
+  final String creatorUid;
 
   const DetailScreen({
     Key? key,
@@ -27,6 +29,7 @@ class DetailScreen extends StatefulWidget {
     required this.likes,
     required this.dong,
     required this.docId,
+    required this.creatorUid,
   }) : super(key: key);
 
   @override
@@ -35,6 +38,7 @@ class DetailScreen extends StatefulWidget {
 
 class _DetailScreenState extends State<DetailScreen>
     with SingleTickerProviderStateMixin {
+  late User _user;
   late Map<String, String> data;
   late ContentsRepository _contentsRepository;
   late FirebaseRepository _firebaseRepository;
@@ -49,13 +53,14 @@ class _DetailScreenState extends State<DetailScreen>
 
   @override
   void initState() {
+    _user = FirebaseAuth.instance.currentUser!;
     data = {
       "cid": widget.cid,
       "image": widget.image,
       "title": widget.title,
       "location": widget.location,
       "price": widget.price,
-      "likes": widget.likes
+      "likes": widget.likes,
     };
     _isMyFavoriteContent = false;
     _appBarAnimationController = AnimationController(vsync: this);
@@ -162,20 +167,44 @@ class _DetailScreenState extends State<DetailScreen>
             child: Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 10.0, vertical: 7.0),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(5),
-                    // BoxDecoration 사용시에는 color를 BoxDecoration 안에 설정해줘야 함.
-                    color: Color(0xfff08f4f),
-                  ),
-                  child: Text(
-                    "채팅으로 거래하기",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 16.0,
-                      fontWeight: FontWeight.bold,
+                GestureDetector(
+                  onTap: () {
+                    if (_user.uid.toString() == widget.creatorUid) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => UpdateScreen(
+                            docId: widget.docId.toString(),
+                            dong: widget.dong.toString(),
+                            cid: "${data['cid']}",
+                            image: "${data['image']}",
+                            title: "${data['title']}",
+                            location: "${data['location']}",
+                            price: "${data['price']}",
+                            likes: "${data['likes']}",
+                            creatorUid: "${data['creatorUid']}",
+                          ),
+                        ),
+                      );
+                    }
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 10.0, vertical: 7.0),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(5),
+                      // BoxDecoration 사용시에는 color를 BoxDecoration 안에 설정해줘야 함.
+                      color: Color(0xfff08f4f),
+                    ),
+                    child: Text(
+                      _user.uid.toString() == widget.creatorUid
+                          ? "수정하기"
+                          : '채팅으로 거래하기',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 16.0,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                 ),
@@ -214,7 +243,12 @@ class _DetailScreenState extends State<DetailScreen>
           onPressed: () {},
           icon: _makeAnimatedIcon(Icons.share_outlined),
         ),
-        _makePopUpMenu(),
+        _user.uid.toString() == widget.creatorUid
+            ? _makePopUpMenu()
+            : IconButton(
+                onPressed: () {},
+                icon: _makeAnimatedIcon(Icons.more_vert),
+              ),
       ],
     );
   }
@@ -236,6 +270,7 @@ class _DetailScreenState extends State<DetailScreen>
                 location: "${data['location']}",
                 price: "${data['price']}",
                 likes: "${data['likes']}",
+                creatorUid: "${data['creatorUid']}",
               ),
             ),
           );

@@ -1,4 +1,3 @@
-import 'package:carrot_clone/repositories/contents_repository.dart';
 import 'package:carrot_clone/repositories/firebase_repository.dart';
 import 'package:carrot_clone/screens/add_screen.dart';
 import 'package:carrot_clone/screens/detail_screen.dart';
@@ -222,6 +221,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   location: "${data[index]['location']}",
                   price: "${data[index]['price']}",
                   likes: "${data[index]['likes']}",
+                  creatorUid: "${data[index]['creatorUid']}",
                 ),
               ),
             );

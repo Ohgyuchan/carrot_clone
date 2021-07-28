@@ -20,6 +20,7 @@ class _SignInScreenState extends State<SignInScreen> {
             FocusScope.of(context).unfocus();
           },
           child: _bodyWidget()),
+      resizeToAvoidBottomInset: true,
     );
   }
 
