@@ -7,7 +7,7 @@ class FirebaseRepository {
 
 // 문서 생성 (Create)
   Future<void> createDoc(String dong, String cid, String image, String title,
-      String location, String price) async {
+      String location, String price, String creatorUid) async {
     itemCollection.doc(dong).collection(dong).add({
       "cid": cid,
       "image": image,
@@ -15,6 +15,7 @@ class FirebaseRepository {
       "location": location,
       "price": price,
       "likes": 0,
+      "creatorUid": creatorUid,
     });
   }
 
@@ -30,7 +31,8 @@ class FirebaseRepository {
         "title": "${snapshot[i]['title']}",
         "location": "${snapshot[i]['location']}",
         "price": "${snapshot[i]['price']}",
-        "likes": "${snapshot[i]['likes']}"
+        "likes": "${snapshot[i]['likes']}",
+        "creatorUid": "${snapshot[i]['creatorUid']}",
       };
       data.add(_data);
     }

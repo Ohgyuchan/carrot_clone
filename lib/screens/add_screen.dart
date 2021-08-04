@@ -1,4 +1,5 @@
 import 'package:carrot_clone/repositories/firebase_repository.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class AddScreen extends StatefulWidget {
@@ -16,6 +17,7 @@ class _AddScreenState extends State<AddScreen> {
   final _formKey = GlobalKey<FormState>();
   TextEditingController _titleController = new TextEditingController();
   TextEditingController _priceController = new TextEditingController();
+  User? user = FirebaseAuth.instance.currentUser;
 
   late FirebaseRepository _firebaseRepository;
 
@@ -98,7 +100,8 @@ class _AddScreenState extends State<AddScreen> {
                   'assets/images/carrot.jpg',
                   _titleController.text.toString(),
                   '제주 제주시 ${widget.dong}',
-                  _priceController.text.toString());
+                  _priceController.text.toString(),
+                  user!.uid.toString());
               Navigator.pop(context);
             }
           },

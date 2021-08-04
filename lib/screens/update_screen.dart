@@ -11,16 +11,19 @@ class UpdateScreen extends StatefulWidget {
   final String location;
   final String price;
   final String likes;
+  final String creatorUid;
+
   const UpdateScreen({
     Key? key,
+    required this.dong,
+    required this.docId,
     required this.cid,
     required this.image,
     required this.title,
     required this.location,
     required this.price,
     required this.likes,
-    required this.dong,
-    required this.docId,
+    required this.creatorUid,
   }) : super(key: key);
 
   @override
@@ -29,8 +32,6 @@ class UpdateScreen extends StatefulWidget {
 
 class _UpdateScreenState extends State<UpdateScreen> {
   final _formKey = GlobalKey<FormState>();
-  late String title;
-  late String price;
   late TextEditingController _titleController;
   late TextEditingController _priceController;
 
@@ -38,10 +39,8 @@ class _UpdateScreenState extends State<UpdateScreen> {
 
   @override
   void initState() {
-    title = widget.title;
-    price = widget.price;
-    _titleController = new TextEditingController(text: title.toString());
-    _priceController = new TextEditingController(text: price.toString());
+    _titleController = new TextEditingController(text: widget.title);
+    _priceController = new TextEditingController(text: widget.price);
     _firebaseRepository = FirebaseRepository();
     super.initState();
   }
@@ -127,14 +126,15 @@ class _UpdateScreenState extends State<UpdateScreen> {
                 context,
                 MaterialPageRoute(
                   builder: (context) => DetailScreen(
-                    docId: widget.docId.toString(),
-                    dong: widget.dong.toString(),
-                    cid: widget.cid.toString(),
-                    image: widget.image.toString(),
+                    docId: widget.docId,
+                    dong: widget.dong,
+                    cid: widget.cid,
+                    image: widget.image,
                     title: _titleController.text.toString(),
-                    location: widget.location.toString(),
+                    location: widget.location,
                     price: _priceController.text.toString(),
-                    likes: widget.likes.toString(),
+                    likes: widget.likes,
+                    creatorUid: widget.creatorUid,
                   ),
                 ),
               );
