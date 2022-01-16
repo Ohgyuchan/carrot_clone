@@ -2,9 +2,7 @@ import 'package:carrot_clone/screens/favorite_screen.dart';
 import 'package:carrot_clone/screens/sign_in_screen.dart';
 import 'package:carrot_clone/utils/authentication.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 class ProfileScreen extends StatefulWidget {
   final User user;
@@ -209,7 +207,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           _makeIconWithText(Icon(Icons.share_outlined), '당근마켓 공유'),
           _makeIconWithText(Icon(Icons.mic_none), '공지사항'),
           _makeIconWithText(Icon(Icons.support_agent), '자주 묻는 질문'),
-          _makeIconWithText(Icon(Icons.settings_outlined), '앱 설'),
+          _makeIconWithText(Icon(Icons.settings_outlined), '앱 설정'),
         ],
       ),
     );
