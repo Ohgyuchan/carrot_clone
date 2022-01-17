@@ -2,14 +2,10 @@ import 'package:carrot_clone/screens/app_screen.dart';
 import 'package:carrot_clone/utils/authentication.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:get/get.dart';
 import 'package:sign_button/sign_button.dart';
 
-class SignInScreen extends StatefulWidget {
-  @override
-  _SignInScreenState createState() => _SignInScreenState();
-}
-
-class _SignInScreenState extends State<SignInScreen> {
+class SignInScreen extends StatelessWidget {
   TextEditingController _emailController = new TextEditingController();
   TextEditingController _passwordController = new TextEditingController();
   @override
@@ -19,12 +15,12 @@ class _SignInScreenState extends State<SignInScreen> {
           onTap: () {
             FocusScope.of(context).unfocus();
           },
-          child: _bodyWidget()),
+          child: _bodyWidget(context)),
       resizeToAvoidBottomInset: true,
     );
   }
 
-  Widget _bodyWidget() {
+  Widget _bodyWidget(BuildContext context) {
     return SingleChildScrollView(
       child: Padding(
         padding: const EdgeInsets.all(30.0),
@@ -218,27 +214,23 @@ class _SignInScreenState extends State<SignInScreen> {
     User? user = await Authentication.signInWithFacebook();
 
     if (user != null) {
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(
-          builder: (context) => AppScreen(
-            user: user,
-            loginType: LoginType.Facebook,
-          ),
+      Get.off(
+        () => AppScreen(
+          user: user,
+          loginType: LoginType.Facebook,
         ),
       );
     }
   }
 
   Future<void> _googleSignIn() async {
-    User? user = await Authentication.signInWithGoogle(context: context);
+    User? user = await Authentication.signInWithGoogle();
 
     if (user != null) {
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(
-          builder: (context) => AppScreen(
-            user: user,
-            loginType: LoginType.Google,
-          ),
+      Get.off(
+        () => AppScreen(
+          user: user,
+          loginType: LoginType.Google,
         ),
       );
     }
